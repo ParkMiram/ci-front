@@ -38,3 +38,14 @@ jobs:
 
     - name: Docker push
       run: docker push ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}
+
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          docker pull ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}
+          docker rm -f ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}
+          docker run --name ${{secrets.DOCKER_REPO}} -p 80:80 -d ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}
