@@ -48,4 +48,5 @@ jobs:
         script: |
           docker pull ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}:front
           docker rm -f ${{secrets.DOCKER_REPO}}
-          docker run --name ${{secrets.DOCKER_REPO}} -p 80:80 --network server -d ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}
+          # docker run --name ${{secrets.DOCKER_REPO}} -p 80:80 --network server -d ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}
+          docker run --name ${{secrets.DOCKER_REPO}} -p 80:80 -d ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}
