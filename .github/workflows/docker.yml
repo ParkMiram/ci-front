@@ -34,10 +34,10 @@ jobs:
         password: ${{secrets.DOCKER_PASSWORD}}
 
     - name: Docker build
-      run: docker build -t ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}:front .
+      run: docker build -t ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}} .
 
     - name: Docker push
-      run: docker push ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}:front
+      run: docker push ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}
 
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v1.0.3
@@ -46,6 +46,8 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          docker pull ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}:front
+          docker pull ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}
           docker rm -f ${{secrets.DOCKER_REPO}}
-          docker run --name ${{secrets.DOCKER_REPO}} -p 80:80 --network server -d ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}
+          # docker run --name ${{secrets.DOCKER_REPO}} -p 80:80 --network server -d ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}
+          # docker run --name ${{secrets.DOCKER_REPO}} -p 80:80 -d ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}:front
+          docker run --name ${{secrets.DOCKER_REPO}} --network server -d ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}
