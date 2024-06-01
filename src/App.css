@@ -1,13 +1,29 @@
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+}
+*::-webkit-scrollbar {
+  width: 7px;
+  background-color: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: #cccccc;
+  border-radius: 3.5px;
 }
 
 html,
 body {
   width: 100vw;
   height: 100vh;
+  font-family: 'Pretendard-Regular', serif !important;
 }
 
 body {
@@ -15,14 +31,20 @@ body {
 }
 #root {
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 0;
+}
+button, input {
+  font-family: 'Pretendard-Regular', serif !important;
+}
+li {
+  list-style: none;
 }
 
 .container {
-  width: 300px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  width: 420px;
 }
 .form > input {
   border: 1px solid #ccc;
@@ -32,28 +54,95 @@ body {
   margin-bottom: 10px;
 }
 .form > button {
-  border-radius: 10px;
+  width: 100%;
   height: 40px;
+  border-radius: 10px;
   border: 0;
   cursor: pointer;
   background-color: dodgerblue;
   color: #fff;
 }
+.boardList {
+  max-height: calc(100vh - 100px - 196px - 24px);
+  overflow: auto;
+}
 .data {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #aaa;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
+  margin: 10px 0;
+  padding: 15px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+}
+.data:first-child {
+  margin-top: 0;
 }
 .data:last-child {
   margin-bottom: 0;
 }
+.board {
+  width: 100%;
+}
+.name {
+  display: flex;
+  justify-content: space-between;
+}
+.text {
+  margin: 5px 0;
+}
 .delete {
-  background-color: #f8f8f8;
-  padding: 0 10px;
+  cursor: pointer;
+  background-color: transparent;
   border: 0;
+  color: #aaaaaa;
+}
+.data > .button {
+  display: flex;
+  justify-content: flex-end;
+}
+.data > .button > button {
+  background-color: #ffffff;
+  border: 1px solid #e3e3e3;
+  padding: 5px 10px;
   border-radius: 10px;
+  cursor: pointer;
+}
+.commentWrap {
+  border-top: 1px solid #aaaaaa;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+.comment {
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+.comment:last-child {
+  margin-bottom: 0;
+}
+.commentDelete {
+  font-size: 12px;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  color: #aaaaaa;
+}
+.inputComment {
+  width: 100%;
+  height: 30px;
+  margin-top: 10px;
+}
+.inputComment > input {
+  height: 100%;
+  width: calc(100% - 55px);
+  margin-right: 5px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  padding: 0 7px;
+}
+.inputComment > button {
+  height: 100%;
+  width: 50px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
   cursor: pointer;
 }

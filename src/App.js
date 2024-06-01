@@ -3,87 +3,177 @@ import axios from "./axiosInstance";
 import {useEffect, useState} from "react";
 
 function App() {
-  const [data, setData] = useState([]);
+  // BOARD DATA
+  const [boardData, setBoardData] = useState([]);
+  // COMMENT DATA
+  const [cmmtData, setCmmtData] = useState([]);
+  // TOGGLE
+  const [toggle, setToggle] = useState(Array(boardData.length).fill(false));
 
-  const getData = async () => {
+  // GET BOARD
+  const getBoardData = async () => {
     try {
       const response = await axios.get("/boards");
-      setData(response.data);
+      setBoardData(response.data);
     } catch (e) {
       console.error(e.response?.data.message);
     }
   }
-
-  const saveData = async () => {
+  // POST BOARD
+  const saveBoardData = async () => {
     const name = document.getElementById("name").value;
     const text = document.getElementById("text").value;
     if(name === null || name === undefined || name === "") {
-      return alert("name을 입력해 주세요");
+      return alert("작성자명을 입력해 주세요");
     }
     if(text === null || text === undefined || text === "") {
-      return alert("text를 입력해 주세요");
+      return alert("내용을 입력해 주세요");
     }
     try {
       await axios.post("/boards",
           {name: name, text: text});
-      getData();
+    } catch (e) {
+      console.error(e.message);
+    }
+    await getBoardData();
+  }
+  // DELETE BOARD
+  const onClickBoardDelete = async (id) => {
+    try {
+      await axios.delete(`/boards/${id}`);
+    } catch (e) {
+      console.error(e.response?.data.message);
+    }
+    await getBoardData();
+  }
+
+  // TOGGLE
+  const toggleCmmt = (el, i) => {
+    const click = [...toggle];
+    click[i] = !toggle[i];
+    // if (click[i] === true) getCmmtData(el.id);
+    setToggle(click);
+  }
+  // GET COMMENT
+  const getCmmtData = async (id) => {
+    try {
+      // const response = await axios.get(`/${id}/comments`);
+      const response = await axios.get(`/comments`);
+      setCmmtData(response.data);
     } catch (e) {
       console.error(e.response?.data.message);
     }
   }
-
-  const onClickDelete = async (id) => {
+  // POST COMMENT
+  const saveCmmtData = async (id, i) => {
+    const text = document.getElementById(`cmmtText${i}`).value;
+    if(text === null || text === undefined || text === "") {
+      return alert("댓글을 입력해 주세요");
+    }
     try {
-      await axios.delete(`/boards/${id}`);
-      getData();
+      await axios.post(`/${id}/comments`, { boardId: id, text: text });
+    } catch (e) {
+      console.error(e.message);
+    }
+    await getCmmtData();
+  }
+  // DELETE COMMENT
+  const onClickCmmtDelete = async (bid, id) => {
+    try {
+      await axios.delete(`/${bid}/comments/${id}`);
     } catch (e) {
       console.error(e.response?.data.message);
     }
+    await getCmmtData();
   }
 
   useEffect(() => {
-    getData();
+    getBoardData();
+    getCmmtData();
   }, []);
 
   return (
-      <>
-        <div className="container">
-          <form className="form">
-            <input
-                type="text"
-                placeholder="name"
-                id="name"
-                style={{width: "100%"}}
-            />
-            <input
-                type="text"
-                placeholder="text"
-                defaultValue=""
-                id="text"
-                style={{width: "100%"}}
-            />
-            <button
-                type="submit"
-                onClick={saveData}
-                style={{width: "300px", margin: "0 auto"}}
-            >
-              SUBMIT
-            </button>
-          </form>
+    <>
+      <div className="container">
+        <form className="form">
+          <h1>미람 게시판</h1>
           <br/>
+          <input
+              type="text"
+              placeholder="작성자명"
+              id="name"
+              style={{width: "100%"}}
+          />
+          <input
+              type="text"
+              placeholder="내용"
+              id="text"
+              style={{width: "100%"}}
+          />
+          <button
+              type="submit"
+              onClick={saveBoardData}
+          >
+            SUBMIT
+          </button>
+        </form>
+        <br/>
+        <div className="boardList">
           {
-            data.map((el, i) =>
-                <div key={i} className="data">
-                  <div>
-                    <b className="name">{el.name}</b>
-                    <p className="text">{el.text}</p>
+            boardData.map((boardItem, i) =>
+              <div key={i} className="data">
+                <div className="board">
+                  <div className="name">
+                    <b>{boardItem.name}</b>
+                    <button
+                        className="delete"
+                        onClick={() => onClickBoardDelete(boardItem.id)}
+                    >
+                      ✕
+                    </button>
                   </div>
-                  <button className="delete" onClick={() => onClickDelete(el.id)}>✕</button>
+                  <p className="text">{boardItem.text}</p>
                 </div>
+                <div className="button">
+                  <button
+                      onClick={() => toggleCmmt(boardItem, i)}
+                  >
+                    댓글 {toggle[i] === true ? '숨기기' : '펼치기'}
+                  </button>
+                </div>
+                {
+                  toggle[i] === true ?
+                  <div className="commentWrap">
+                    <ul>
+                      {
+                          cmmtData
+                              .filter(cmmtItem => boardItem.id === cmmtItem.boardId)
+                              .map((cmmtItem, i) =>
+                              <li key={i} className="comment">
+                                <p>{cmmtItem.text}</p>
+                                <button
+                                    className="commentDelete"
+                                    onClick={() => onClickCmmtDelete(cmmtItem.boardId, cmmtItem.id)}
+                                >
+                                  ✕
+                                </button>
+                              </li>
+                          )
+                      }
+                    </ul>
+                    <div className="inputComment">
+                      <input type="text" id={`cmmtText${i}`} placeholder="댓글" />
+                      <button onClick={() => saveCmmtData(boardItem.id, i)}>등록</button>
+                    </div>
+                  </div>
+                  : <></>
+                }
+              </div>
             )
           }
         </div>
-      </>
+      </div>
+    </>
   );
 }
 
