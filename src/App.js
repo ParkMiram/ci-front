@@ -1,5 +1,5 @@
 import './App.css';
-import axios from "./axiosInstance";
+import {boardAxiosInstance, cmmtAxiosInstance} from "./axiosInstance";
 import {useEffect, useState} from "react";
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
   // GET BOARD
   const getBoardData = async () => {
     try {
-      const response = await axios.get("/boards");
+      const response = await boardAxiosInstance.get("/boards");
       setBoardData(response.data);
     } catch (e) {
       console.error(e.response?.data.message);
@@ -30,7 +30,7 @@ function App() {
       return alert("내용을 입력해 주세요");
     }
     try {
-      await axios.post("/boards",
+      await boardAxiosInstance.post("/boards",
           {name: name, text: text});
     } catch (e) {
       console.error(e.message);
@@ -40,7 +40,7 @@ function App() {
   // DELETE BOARD
   const onClickBoardDelete = async (id) => {
     try {
-      await axios.delete(`/boards/${id}`);
+      await boardAxiosInstance.delete(`/boards/${id}`);
     } catch (e) {
       console.error(e.response?.data.message);
     }
@@ -58,7 +58,7 @@ function App() {
   const getCmmtData = async (id) => {
     try {
       // const response = await axios.get(`/${id}/comments`);
-      const response = await axios.get(`/comments`);
+      const response = await cmmtAxiosInstance.get(`/comments`);
       setCmmtData(response.data);
     } catch (e) {
       console.error(e.response?.data.message);
@@ -71,7 +71,7 @@ function App() {
       return alert("댓글을 입력해 주세요");
     }
     try {
-      await axios.post(`/${id}/comments`, { boardId: id, text: text });
+      await cmmtAxiosInstance.post(`/${id}/comments`, { boardId: id, text: text });
     } catch (e) {
       console.error(e.message);
     }
@@ -80,7 +80,7 @@ function App() {
   // DELETE COMMENT
   const onClickCmmtDelete = async (bid, id) => {
     try {
-      await axios.delete(`/${bid}/comments/${id}`);
+      await cmmtAxiosInstance.delete(`/${bid}/comments/${id}`);
     } catch (e) {
       console.error(e.response?.data.message);
     }
