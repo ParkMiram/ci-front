@@ -32,11 +32,11 @@ function App() {
     try {
       await boardAxiosInstance.post("/boards",
           {name: name, text: text});
+      document.getElementById("name").value = '';
+      document.getElementById("text").value = '';
     } catch (e) {
       console.error(e.message);
     }
-    document.getElementById("name").value = '';
-    document.getElementById("text").value = '';
     await getBoardData();
   }
   // DELETE BOARD
@@ -74,10 +74,10 @@ function App() {
     }
     try {
       await cmmtAxiosInstance.post(`/${id}/comments`, { boardId: id, text: text });
+      document.getElementById(`cmmtText${i}`).value = '';
     } catch (e) {
       console.error(e.message);
     }
-    document.getElementById(`cmmtText${i}`).value = '';
     await getCmmtData();
   }
   // DELETE COMMENT
