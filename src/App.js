@@ -35,6 +35,8 @@ function App() {
     } catch (e) {
       console.error(e.message);
     }
+    document.getElementById("name").value = '';
+    document.getElementById("text").value = '';
     await getBoardData();
   }
   // DELETE BOARD
@@ -75,6 +77,7 @@ function App() {
     } catch (e) {
       console.error(e.message);
     }
+    document.getElementById(`cmmtText${i}`).value = '';
     await getCmmtData();
   }
   // DELETE COMMENT
@@ -95,7 +98,7 @@ function App() {
   return (
     <>
       <div className="container">
-        <form className="form">
+        <div className="form">
           <h1>미람 게시판</h1>
           <br/>
           <input
@@ -110,13 +113,8 @@ function App() {
               id="text"
               style={{width: "100%"}}
           />
-          <button
-              type="submit"
-              onClick={saveBoardData}
-          >
-            SUBMIT
-          </button>
-        </form>
+          <button onClick={saveBoardData}>SUBMIT</button>
+        </div>
         <br/>
         <div className="boardList">
           {
